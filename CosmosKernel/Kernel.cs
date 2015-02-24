@@ -8,9 +8,9 @@ namespace CosmosKernel1
 {
     public class Kernel : Sys.Kernel
     {
-        public List<File> documents { get; set; }
-        public Directory homeDir { get; set; }
-        public Directory currentDir { get; set; }
+        public List<File> documents;
+        public Directory homeDir;
+        public Directory currentDir;
         public Variable variables;
         public CMD command;
 
