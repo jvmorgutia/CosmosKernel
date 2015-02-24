@@ -8,16 +8,33 @@ namespace CosmosKernel1
 {
     public class Variable
     {
-        public List<string> varNames { get; set; }
-        public List<object> values { get; set; }
+        public const int INT = 0;
+        public const int CHAR = 1;
+        public const int STRING = 2;
+
+        public List<string> varNames;
+        public List<string> values;
+        public List<int> type;
 
         public Variable()
         {
             varNames = new List<string>();
-            values = new List<object>();
+            values = new List<string>();
         }
-        
-        public object VarExist(string a)
+
+        public int VarExist(string name)
+        {
+            for (int i = 0; i < varNames.Count; i++)
+            {
+                if (StringCompare(varNames[i], name))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public string GetVarValue(string a)
         {
             for (int i = 0; i < varNames.Count; i++)
             {
@@ -28,11 +45,23 @@ namespace CosmosKernel1
             }
             return null;
         }
-        
-        public void AddVar(string name, object valueOf)
+
+
+        public void AddVar(string name, string valueOf)
         {
-            varNames.Add(name);
-            values.Add(valueOf);
+            int idxOfVar = VarExist(name);
+            if (idxOfVar == -1)
+            {
+                varNames.Add(name);
+                values.Add(valueOf);
+            }
+            else
+            {
+                //Console.WriteLine("OldValue: " + values[idxOfVar]);
+                values[idxOfVar] = valueOf;
+                //Console.WriteLine("NewValue: " + values[idxOfVar] + "Should be: " + valueOf);
+            }
+
         }
 
         public bool StringCompare(string a, string b)
