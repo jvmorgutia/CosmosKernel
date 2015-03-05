@@ -10,13 +10,13 @@ namespace CosmosKernel1
 {
    public class File
     {
-        public String name { get; set; }
-        public int size { get; set; } //IN BYTES
-        public String ext { get; set; }
-        public List<String> content { get; set; }
-        private int month { get; set; }
-        private int day { get; set; }
-        private int year { get; set; }
+       public String name;
+       public int size; //IN BYTES
+       public String ext;
+       public List<String> content;
+       private int month;
+       private int day;
+       private int year;
 
        public File(String name, String ext)
        {

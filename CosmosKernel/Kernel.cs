@@ -134,6 +134,15 @@ namespace CosmosKernel1
                     {
                         Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     }
+                    else if (prefix == "echo")
+                    {
+                        string[] arr = input.Split(' ');
+                        for (int i = 1; i < arr.Length; i++)
+                        {
+                            Console.Write(arr[i] + " ");
+                        }
+                        Console.WriteLine();
+                    }
                     else
                     {
                         Console.WriteLine("That is an unknown command. Please try again!");

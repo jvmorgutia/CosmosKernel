@@ -8,9 +8,9 @@ namespace CosmosKernel1
 {
    public class Directory
     {
-        public string name { get; set; }
-        public Directory parent { get; set; }
-        public List<Directory> children { get; set; }
+        public string name;
+        public Directory parent;
+        public List<Directory> children;
 
 
         public Directory(String name, Directory parent)
