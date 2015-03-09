@@ -44,7 +44,7 @@ namespace CosmosKernel1
             vars[0] = varName;
             
 
-            if (operations.Count > 0 && !stringFound) IntExpression(expression);
+            if (operations.Count > 0 && !stringFound) Expression(expression);
             else if (operations.Count > 0 && stringFound) StringExpression(expression);
             else if (IsVariable(expression)) CopyVariable(expression);
             else if (!stringFound) SetInt(expression);
@@ -158,7 +158,7 @@ namespace CosmosKernel1
             }
         }
 
-        public void IntExpression(string expression)
+        public void Expression(string expression)
         {
             string leftArg = expression.Split(operations[0])[0].Trim();
             string rightArg = expression.Split(operations[0])[1].Trim();
