@@ -12,8 +12,7 @@ namespace CosmosKernel1
         public Directory parent;
         public List<Directory> children;
         public List<File> documents;
-        public Variable variables;
-        public CMD command;
+      
 
         public Directory()
         {
@@ -21,8 +20,7 @@ namespace CosmosKernel1
             children = new List<Directory>();
             parent = this;
             documents = new List<File>();
-            variables = new Variable();
-            command = new CMD();
+            
         }
 
         public Directory(String name, Directory parent)
@@ -31,8 +29,6 @@ namespace CosmosKernel1
             this.name = name;
             this.parent = parent;
             documents = new List<File>();
-            variables = new Variable();
-            command = new CMD();
         }
 
         public void addFolder(Directory newDirectory){
@@ -66,6 +62,8 @@ namespace CosmosKernel1
                     Console.WriteLine("     dir       - lists files in the current directory");
                     Console.WriteLine("     run       - runs the appropriate BATCH file USE <filename>.<bat>");
                     Console.WriteLine("     create    - creates the appropriate file USE <filename>.<ext>");
+                    Console.WriteLine("     mkdir     - creates a new directory inside the current directory");
+                    Console.WriteLine("     cd        - changes to the specified directory if it exists");
                     Console.WriteLine("===================================================================");
                     break;
 
@@ -124,13 +122,13 @@ namespace CosmosKernel1
                     if (prefix == "set")
                     {
                         action = input.Split(' ')[1];
-                        var = command.EvaluateCommand(input, variables);
-                        variables.AddVar((string)var[0], var[1]);
+                        var = Kernel.command.EvaluateCommand(input, Kernel.variables);
+                        Kernel.variables.AddVar((string)var[0], var[1]);
                     }
                     else if (prefix == "out")
                     {
                         action = input.Split(' ')[1];
-                        object a = variables.GetVarValue(action);
+                        object a = Kernel.variables.GetVarValue(action);
                         Console.WriteLine(a);
                         break;
                     }

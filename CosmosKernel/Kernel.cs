@@ -11,10 +11,40 @@ namespace CosmosKernel1
 
         Directory home;
         Directory currentDir;
+        public static Variable variables;
+        public static CMD command;
+
+        //public static  Variable Variables
+        //{
+        //    get
+        //    {
+        //        return variables;
+        //    }
+        //    set
+        //    {
+        //        variables = value;
+        //    }
+
+        //}
+        //public CMD Command
+        //{
+
+        //    get
+        //    {
+        //        return command;
+        //    }
+        //    set
+        //    {
+        //        command = value;
+        //    }
+        //}
+
         protected override void BeforeRun()
         {
             home = new Directory();
             currentDir = home;
+            variables = new Variable();
+            command = new CMD();
             Console.WriteLine("Cosmos booted successfully. \nPlease enter a command or type 'help' for more options.");
         }
 
@@ -32,7 +62,7 @@ namespace CosmosKernel1
                 if (currentDir == home)
                     Console.Write(currentDir + "> ");
                 else
-                    Console.WriteLine(".." + currentDir + "> ");
+                    Console.WriteLine("../" + currentDir + "> ");
                 var input = Console.ReadLine().ToLower();
                 string[] line = input.Split(' ');
                 string dirname = line[1];
@@ -44,7 +74,7 @@ namespace CosmosKernel1
                       currentDir.documents.Add(new File(dirname, "Directory"));
                       break;
                     case "cd":
-                      if (dirname == "../")
+                      if (dirname == "..")
                       {
                           currentDir = currentDir.parent;
                       }
