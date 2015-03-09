@@ -118,12 +118,16 @@ namespace CosmosKernel1
                     break;
 
                 default:
-                    string[] var = new string[2];
+                    string[] var = new string[3];
                     if (prefix == "set")
                     {
                         action = input.Split(' ')[1];
                         var = Kernel.command.EvaluateCommand(input, Kernel.variables);
-                        Kernel.variables.AddVar((string)var[0], var[1]);
+                        if (var[0] != null)
+                        {
+                            Kernel.variables.AddVar((string)var[0], var[1], Int32.Parse(var[2]));
+                        }
+                        
                     }
                     else if (prefix == "out")
                     {

@@ -21,9 +21,10 @@ namespace CosmosKernel1
         public string[] EvaluateCommand(string input, Variable existingVariables)
         {
             variables = existingVariables;
-            vars = new string[2];
+            vars = new string[3];
             operations = new List<char>();
             string varName = input.Split(' ')[1].Trim();
+            varName = varName.Split('=')[0].Trim();
             string expression = input.Split('=')[1].Trim();
 
             for (int i = 0; i < expression.Length; i++)
@@ -34,7 +35,14 @@ namespace CosmosKernel1
                 else if (expression[i] == '/') operations.Add('/');
                 else if (expression[i] == '"') stringFound = true;
             }
+            if (!variables.ValidVarName(varName))
+            {
+                Console.WriteLine("Invalid Variable Name");
+                vars[0] = null;
+                return vars;
+            }
             vars[0] = varName;
+            
 
             if (operations.Count > 0 && !stringFound) IntExpression(expression);
             else if (operations.Count > 0 && stringFound) StringExpression(expression);
@@ -48,7 +56,16 @@ namespace CosmosKernel1
 
         public void CopyVariable(string expression)
         {
-            vars[1] = variables.GetVarValue(expression);
+            int idx = variables.VarExist(expression);
+            if (idx != -1) 
+            {
+                vars[1] = variables.GetVarValue(expression);
+                vars[2] = "" + variables.varType[idx];
+            }
+            Console.WriteLine("Variable does not exist");
+            vars[0] = null;
+                
+            
         }
 
         public void SetString(string expression)
@@ -71,11 +88,13 @@ namespace CosmosKernel1
             }
 
             vars[1] = stringVal;
+            vars[2] = "" + Variable.STRING;
         }
 
         public void SetInt(string expression)
         {
             vars[1] = expression;
+            vars[2] = "" + Variable.INT;
         }
 
         public void StringExpression(string expression)
@@ -135,6 +154,7 @@ namespace CosmosKernel1
 
                 stringVal = leftStringVal + rightStringVal;
                 vars[1] = stringVal;
+                vars[2] = "" + Variable.STRING;
             }
         }
 
@@ -147,6 +167,10 @@ namespace CosmosKernel1
             int leftValue = 0;
             int rightValue = 0;
 
+            int idxOfLeft = -1;
+            int idxOfRight =-1;
+            bool foundLeftVars = false;
+            bool foundRightVars = false;
 
 
             int finalValue = 0;
@@ -155,6 +179,8 @@ namespace CosmosKernel1
             {
                 leftStrVal = (string)variables.GetVarValue(leftArg);
                 leftValue = Int32.Parse((string)variables.GetVarValue(leftArg));
+                idxOfLeft = variables.VarExist(leftArg);
+                foundLeftVars = true;
             }
             else
             {
@@ -165,10 +191,40 @@ namespace CosmosKernel1
             {
                 rightStrVal = (string)variables.GetVarValue(rightArg);
                 rightValue = Int32.Parse(rightStrVal);
+                idxOfRight = variables.VarExist(rightArg);
+                foundRightVars = true;
             }
             else
             {
                 rightValue = Int32.Parse(rightArg);
+            }
+
+
+            if (variables.GetType(idxOfLeft) == Variable.STRING || variables.GetType(idxOfRight) == Variable.STRING)
+            {
+                if (operations[0] == '+')
+                {
+                    if (foundLeftVars && foundRightVars)
+                    {
+                        vars[1] = variables.GetVarValue(leftArg) + variables.GetVarValue(rightArg);
+                    }
+                    else if (foundLeftVars && !foundRightVars)
+                    {
+                        vars[1] = variables.GetVarValue(leftArg) + rightValue;
+                    }
+                    else
+                    {
+                        vars[1] = leftValue + variables.GetVarValue(rightArg);
+                    }
+
+                    vars[2] = "" + Variable.STRING;
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Cannot perform this operation on string values");
+                }
+                
             }
 
             if (operations[0] == '+') finalValue = leftValue + rightValue;
@@ -181,9 +237,9 @@ namespace CosmosKernel1
                 else
                     finalValue = (int)leftValue / (int)rightValue;
             }
-            //Console.WriteLine("Final Value: " + finalValue);
             string fv = "" + finalValue;
             vars[1] = fv;
+            vars[2] = "" + Variable.INT;
         }
 
         private bool IsVariable(string expression)
