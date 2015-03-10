@@ -46,6 +46,7 @@ namespace CosmosKernel1
             variables = new Variable();
             command = new CMD();
             Console.WriteLine("Cosmos booted successfully. \nPlease enter a command or type 'help' for more options.");
+
         }
 
         public void CreateNewDirectory(string name)

@@ -138,23 +138,72 @@ namespace CosmosKernel1
                     }
                     else if (prefix == "run")
                     {
+                        
                         action = input.Split(' ')[1];
-                        string[] fileslice = action.Split('.');
-                        if (fileslice[1] == "bat")
+                        if (action == "all")
                         {
-                            for (int i = 0; i < documents.Count; i++)
+                            List<List<string>> batchList = new List<List<String>>();
+                            string[] batches = input.Split(' ');
+                            string[] file;
+                            List<string> commandList = new List<string>();
+                            for (int i = 2; i < batches.Length; i++)
                             {
-
-                                if (documents[i].name == fileslice[0])
+                                file = batches[i].Split('.');
+                                if (file[1] == "bat")
                                 {
-                                    List<string> lines = documents[i].content;
-                                    for (int j = 0; j < lines.Count; j++)
+                                    for (int j = 0; j < documents.Count; j++)
                                     {
-                                        menuSelection(lines[j], true);
+                                        if (documents[j].name == file[0])
+                                        {
+                                            
+                                            batchList.Add(documents[j].content);
+                                        }
+                                    }
+                                }
+                            }
+                            int longestList = 0;
+                            for (int i = 0; i < batchList.Count; i++)
+                            {
+                                if (batchList[i].Count > longestList) longestList = batchList[i].Count;
+                            }
+
+                            for (int i = 0; i < longestList; i++)
+                            {
+                                for (int j = 0; j < batchList.Count; j++)
+                                {
+                                    if (i < batchList[j].Count)
+                                    {
+                                        commandList.Add(batchList[j][i]);
+                                    }
+                                   
+                                }
+                            }
+
+                            for (int i = 0; i < commandList.Count; i++)
+                            {
+                                menuSelection(commandList[i], true);
+                            }
+                        }
+                        else
+                        {
+                            string[] fileslice = action.Split('.');
+                            if (fileslice[1] == "bat")
+                            {
+                                for (int i = 0; i < documents.Count; i++)
+                                {
+
+                                    if (documents[i].name == fileslice[0])
+                                    {
+                                        List<string> lines = documents[i].content;
+                                        for (int j = 0; j < lines.Count; j++)
+                                        {
+                                            menuSelection(lines[j], true);
+                                        }
                                     }
                                 }
                             }
                         }
+                        
                     }
                     else if (prefix == "cls")
                     {
